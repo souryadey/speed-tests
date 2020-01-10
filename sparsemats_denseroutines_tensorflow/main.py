@@ -2,7 +2,7 @@
 Sourya Dey, USC
 
 Compare multiplication time of sparse x sparse (both densities varying individually)
-using only regular dense routines in Pytorch, i.e. special sparse routines are NOT used
+using only regular dense routines in Tensorflow, i.e. special sparse routines are NOT used
 '''
 
 import timeit
@@ -17,13 +17,12 @@ def matmult_random(a=1000,b=1000,c=1000, density1=1, density2=1):
     '''
     setup = (
             'import numpy as np;'
-            'import torch;'
+            'import tensorflow as tf;'
             'from adjmatint import adjmat_random;'
-            'device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu");'
-            'mat1 = torch.randn({0},{1})*torch.as_tensor(adjmat_random(density={3},p={1},n={0}), dtype=torch.float32, device=device);'
-            'mat2 = torch.randn({1},{2})*torch.as_tensor(adjmat_random(density={4},p={2},n={1}), dtype=torch.float32, device=device);'
+            'mat1 = tf.random.normal(({0},{1})) * tf.convert_to_tensor(adjmat_random(density={3},p={1},n={0}), dtype=tf.float32);'
+            'mat2 = tf.random.normal(({1},{2})) * tf.convert_to_tensor(adjmat_random(density={4},p={2},n={1}), dtype=tf.float32);'
             ).format(a,b,c,density1,density2)
-    reps, time = timeit.Timer(stmt = 'torch.matmul(mat1,mat2)', setup=setup).autorange()
+    reps, time = timeit.Timer(stmt = 'tf.linalg.matmul(mat1,mat2)', setup=setup).autorange()
     return time/reps
 
 
@@ -84,17 +83,17 @@ def plot_results(times, filename, multiplier=10**6,
 # Main execution
 # =============================================================================
 if __name__ == '__main__':
-    a,b,c = 2000,1000,2000
-    density1s = [1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.]
-    density2s = [1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.]
+    a,b,c = 8000,1000,8000
+    density1s = [1.,5e-1,2e-1,1e-1,5e-2,2e-2,1e-2]
+    density2s = [1.,5e-1,2e-1,1e-1,5e-2,2e-2,1e-2]
     times = np.zeros((len(density1s),len(density2s)))
     
     for i,density1 in enumerate(density1s):
         for j,density2 in enumerate(density2s):
-            times[i,j] = matmult_clashfree(a,b,c, density1,density2)
+            times[i,j] = matmult_random(a,b,c, density1,density2)
             print('{0}: {1}'.format(density2, times[i,j]))
         print()
     
-    np.savez_compressed('clashfree_1K4Kx4K2K_cpu.npz', times=times, density1s=density1s, density2s=density2s)
+    np.savez_compressed('random_8K1Kx1K8K_cpu_reversedorder.npz', times=times, density1s=density1s, density2s=density2s)
     
-    plot_results(times, filename='clashfree_1K4Kx4K2K_cpu', multiplier=10**3, density1s=density1s, density2s=density2s)
+    plot_results(times, filename='random_8K1Kx1K8K_cpu_reversedorder', multiplier=1, density1s=density1s, density2s=density2s)
