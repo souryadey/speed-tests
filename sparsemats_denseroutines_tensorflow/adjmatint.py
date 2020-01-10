@@ -1,6 +1,15 @@
 import numpy as np
 
 
+def adjmat_random(density, p=800, n=100):
+    d = int(np.ceil(density*p*n))
+    adjmat = np.zeros(n*p) #initialize new adjmat to be filled with 1s
+    locs = np.random.choice(len(adjmat), size=d, replace=False)
+    adjmat[locs] = 1
+        
+    return adjmat.reshape(n,p)
+
+
 def memmap_sweep(p,z, typ=3):
     ''' Generate all left memory addresses in a SINGLE sweep. For definitions, see wt_interleaver '''
     if typ==1:

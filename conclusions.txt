@@ -1,0 +1,11 @@
+Absolutely no trend in random sparsity, either CPU or GPU, large or small matrices
+
+Slight trend for clash free sparsity, seems like when keeping mat2 density fixed and changing mat1, sparser matrices take less time
+But this trend only holds for 1 case in CPU and 1 case in GPU
+It does not hold for another case in CPU
+Moreover, it does not hold when keeping mat1 density fixed and changing mat2
+
+*****
+IN CONCLUSION:
+Using only dense matrix multiplication routines does not lead to any computational speed gain/loss due to varying sparsity of matrices
+*****
