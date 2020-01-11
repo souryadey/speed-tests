@@ -2,11 +2,15 @@
 
 ### This is a repository to test and compare speed and complexity of different programming methods and frameworks.
 
-computation_frameworks -- Compare numpy, torch and tensorflow and Python's native lists
+<br>
+
+#### computation_frameworks
+Compare numpy, torch and tensorflow and Python's native lists
 
 <br>
 
-torch.sparse_&lt;platform&gt;: Characterize the `torch.sparse` API in Pytorch and compare it to using regular dense matrices:
+#### torch.sparse_&lt;platform&gt;
+Characterize the `torch.sparse` API in Pytorch and compare it to using regular dense matrices:
 - Part 1: Comparing on CPU (2014 Macbook pro with 16GB RAM). [Blog article](https://towardsdatascience.com/sparse-matrices-in-pytorch-be8ecaccae6)
 - Part 2: Comparing on GPU (Tesla V100 on AWS p3.2xlarge). [Blog article](https://towardsdatascience.com/sparse-matrices-in-pytorch-part-2-gpus-fd9cc0725b71)<br>
 
@@ -14,7 +18,8 @@ torch.sparse_&lt;platform&gt;: Characterize the `torch.sparse` API in Pytorch an
 
 <br>
 
-sparsemats_denseroutines_&lt;framework&gt;: This compares _storage requirement_ and _time to multiply matrices_ of different levels of sparsity. Here, **sparse matrices are expressed as regular dense matrices** (i.e. we use full size matrices filled with zeros instead of some special sparse API, which is not very effective in its current state). The sparse matrices are formed from 2 processes:
+#### sparsemats_denseroutines_&lt;framework&gt;
+This compares _storage requirement_ and _time to multiply matrices_ of different levels of sparsity. Here, **sparse matrices are expressed as regular dense matrices** (i.e. we use full size matrices filled with zeros instead of some special sparse API, which is not very effective in its current state). The sparse matrices are formed from 2 processes:
 - Randomly filling with zeros
 - Structured according to clash-free pre-defined sparsity, which is [part of my PhD research](https://ieeexplore.ieee.org/document/8689061).<br>
 
