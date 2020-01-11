@@ -20,8 +20,8 @@ def matmult_random(a=1000,b=1000,c=1000, density1=1, density2=1):
             'import torch;'
             'from adjmatint import adjmat_random;'
             'device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu");'
-            'mat1 = torch.randn({0},{1}, dtype=torch.float32, device=device)*torch.as_tensor(adjmat_random(density={3},p={1},n={0}), dtype=torch.float32, device=device);'
-            'mat2 = torch.randn({1},{2}, dtype=torch.float32, device=device)*torch.as_tensor(adjmat_random(density={4},p={2},n={1}), dtype=torch.float32, device=device);'
+            'mat1 = torch.randn({0},{1}, dtype=torch.float32, device=device) * torch.as_tensor(adjmat_random(density={3},p={1},n={0}), dtype=torch.float32, device=device);'
+            'mat2 = torch.randn({1},{2}, dtype=torch.float32, device=device) * torch.as_tensor(adjmat_random(density={4},p={2},n={1}), dtype=torch.float32, device=device);'
             ).format(a,b,c,density1,density2)
     reps, time = timeit.Timer(stmt = 'torch.matmul(mat1,mat2)', setup=setup).autorange()
     return time/reps
@@ -37,7 +37,7 @@ def matvecmult_random(a=1000,b=1000, density=1):
             'import torch;'
             'from adjmatint import adjmat_random;'
             'device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu");'
-            'mat = torch.randn({0},{1}, device=device)*torch.as_tensor(adjmat_random(density={2},p={1},n={0}), dtype=torch.float32, device=device);'
+            'mat = torch.randn({0},{1}, dtype=torch.float32, device=device) * torch.as_tensor(adjmat_random(density={2},p={1},n={0}), dtype=torch.float32, device=device);'
             'vec = torch.randn({1},1, dtype=torch.float32, device=device);'
             ).format(a,b,density)
     reps, time = timeit.Timer(stmt = 'torch.matmul(mat,vec)', setup=setup).autorange()
@@ -62,8 +62,8 @@ def matmult_clashfree(a=1000,b=1000,c=1000, density1=1, density2=1):
 
 
 def plot_results(times, filename, multiplier=10**6,
-                 density1s = [1e-3,2e-3,5e-3,1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.],
-                 density2s = [1e-3,2e-3,5e-3,1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.]):
+                 density1s = [1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.],
+                 density2s = [1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.]):
     colors = ['k','b','r','g','brown','purple','magenta']
     plt.figure(figsize=(10,10))
     for i,density1 in enumerate(density1s):
@@ -85,10 +85,15 @@ def plot_results(times, filename, multiplier=10**6,
 # =============================================================================
 if __name__ == '__main__':
     a,b,c = 1000,1000,1000
+    
+    # regular order
     density1s = [1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.]
     density2s = [1e-2,2e-2,5e-2,1e-1,2e-1,5e-1,1.]
+    
+    # reversed order
     density1s = [1.,5e-1,2e-1,1e-1,5e-2,2e-2,1e-2]
     density2s = [1.,5e-1,2e-1,1e-1,5e-2,2e-2,1e-2]
+    
     times = np.zeros((len(density1s),len(density2s)))
     
     for i,density1 in enumerate(density1s):
@@ -97,6 +102,6 @@ if __name__ == '__main__':
             print('{0}: {1}'.format(density2, times[i,j]))
         print()
     
-    np.savez_compressed('clashfree_reversedorder.npz', times=times, density1s=density1s, density2s=density2s)
+    np.savez_compressed('clashfree_1Kx1K_gpu_reversedorder.npz', times=times, density1s=density1s, density2s=density2s)
     
-    plot_results(times, filename='clashfree_reversedorder', multiplier=10**6, density1s=density1s, density2s=density2s)
+    plot_results(times, filename='clashfree_1Kx1K_gpu_reversedorder', multiplier=10**6, density1s=density1s, density2s=density2s)
