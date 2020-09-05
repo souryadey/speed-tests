@@ -30,3 +30,12 @@ Platforms used are same as above, i.e. 2014 Macbook pro CPU and AWS p3.2xlarge G
 The time complexity results are given as curves of varying density (percentage of non-zero elements). Mat1 and Mat2 are the 2 sparse matrices being multiplied. For example, the filename `random_100,100x100,100_cpu` implies multiplying 2 randomly sparse matrices of size 100x100 each on CPU. `reversedorder` implies that the densities were swept from high to low instead of low to high. This helps to eliminate any bias due to the system heating up and slowing down as a result.<br>
 
 **Conclusions: Both storage and time complexity do not change as density (or sparsity) is varied.** This is because even though the matrices have a lot of zeros, they are stored and operated on in the same way as a regular dense matrix. (Note that some results might consistently show a larger time taken when density is higher, but the difference is too small to be statistically significant).
+
+<br>
+
+#### sparsity_comparisons
+This compares speed of execution of matrices which have specific sparse structures:
+- Structured sparsity: Each row and column has the same number of 1s.
+- Random sparsity: Randomly distribute 1s throughout the matrix.
+- Maximally unstructured sparsity: Put the 1s in blocks, such as all of them in first row.
+The sparse patterns are described using the concept of biadjacency matrices. For more information on such structures, refer to the [earlier linked paper](https://ieeexplore.ieee.org/document/8689061).
